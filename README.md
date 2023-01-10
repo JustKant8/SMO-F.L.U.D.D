@@ -4,7 +4,7 @@ This repo contains a modification to Super Mario Odyssey that adds Fludd (the je
 
 ## Download
 
-When released there will be a download link in this github or an alternate download on GameBanana. Note: This only works for SMO version.1.0.0
+When released there will be a download link(in release tab) in this github or an alternate download on GameBanana. Note: This only works for SMO version.1.0.0
 
 ## Controls
 
