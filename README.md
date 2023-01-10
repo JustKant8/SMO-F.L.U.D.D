@@ -11,6 +11,7 @@ When released there will be a download link in this github or an alternate downl
 - Hover - hold (R) while in the air
 - Rocket - hold (R) to charge and press(A) when ready
 - Turbo - hold (R) to charge while on ground/water when ready
+       - When in water: hold (A) to move up, hold (B) to move down
 
 ## Prerequisites
 
