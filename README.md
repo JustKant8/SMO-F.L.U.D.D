@@ -43,7 +43,8 @@ After a successful build, simply transfer the `atmosphere` folder located inside
 - [OdysseyReversed](https://github.com/shibbo/OdysseyReversed) original decomp repo
 - [open-ead](https://github.com/open-ead/sead) sead Headers
 - [Bryce](https://github.com/brycewithfiveunderscores/Starlight-SMO-Example/) Original Starlight fork for SMO
-- [CraftyBoss] Base project that this mod is made off of
+- [CraftyBoss](https://github.com/CraftyBoss/SMO-Challenges-Base) Base project that this mod is made off of
+- [Amythyst-szs](https://www.youtube.com/c/AmethystSZS) For help with testing and fixing crashes
 
 # Starlight (Original README)
 An enviroment for linking to Splatoon 2 executable and implementing hooks.
