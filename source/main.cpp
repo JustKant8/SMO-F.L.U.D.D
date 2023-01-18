@@ -137,6 +137,10 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 gTextWriter->printf("Rocket: Hold (R) - press (A) when charged\n");
                 gTextWriter->printf("Turbo: Hold (R) - move in direction\n" );
                 gTextWriter->printf("- in water hold A(move up), hold B(move down)\n");
+                gTextWriter->printf("Enable/disable debug: Hold(L), press up on D-Pad\n");
+
+                gTextWriter->printf("\nEnable Left Stick(mode change): \n");
+                gTextWriter->printf("Hold (L), press down left stick: %s\n", BTOC(Fludd().stickActive));
 
                 //gTextWriter->printf("-------Fludd Connectors-------\n");
                 //gTextWriter->printf("Fludd Base Connecting: %s \n", BTOC(Fludd().base->isConnecting));
@@ -199,48 +203,6 @@ bool triggerR(int port) {
     return false;
 }
 
-//This is from Amethyst_szs time travel mod (thanks Amy), note: try replace with custom UI charge timer(working)
-/* bool reduceOxygenForce() {
-
-    if (Fludd().isPUnderWater) {
-        return true;
-    } else if (Fludd().getFluddMode() != 0 && !Fludd().isChargeTimerFull()) {
-        return true;
-    }  
-    else
-        return false;
-}
-
-
-void oxygenReduce(PlayerOxygen* thisPtr) {
-    float oxygenRingCalc;
-
-    // If the player is in water, perform usual calculation
-    if (Fludd().isPUnderWater) {
-        thisPtr->mOxygenFrames++;
-        if (thisPtr->mOxygenFrames >= thisPtr->mOxygenTarget) {
-            thisPtr->mDamageFrames++;
-        }
-
-        oxygenRingCalc = 1.f - (static_cast<float>(thisPtr->mOxygenFrames) /
-                                static_cast<float>(thisPtr->mOxygenTarget));
-        if (oxygenRingCalc <= 0.f)
-            oxygenRingCalc = 0.f;
-    }
-
-    // If the cooldown is running, replace the value in the ring
-    if (!Fludd().isChargeTimerFull() && !Fludd().isPUnderWater && Fludd().getFluddMode() != 0) {
-        oxygenRingCalc = Fludd().calcRocketTimerPercent();
-        if (thisPtr->mOxygenFrames == 0)
-            thisPtr->mOxygenFrames = thisPtr->mPercentageDelay;
-        if (thisPtr->mOxygenFrames >= thisPtr->mOxygenTarget)
-            thisPtr->mOxygenFrames = thisPtr->mOxygenTarget - 1;
-    }
-
-    thisPtr->mPercentage = oxygenRingCalc;
-    return;
-}*/
-
 bool hakoniwaSequenceHook(HakoniwaSequence* sequence) {
     StageScene* stageScene = (StageScene*)sequence->curScene;
 
@@ -249,7 +211,7 @@ bool hakoniwaSequenceHook(HakoniwaSequence* sequence) {
 
     bool isFirstStep = al::isFirstStep(sequence);
 
-    if (al::isPadTriggerUp(-1) && al::isPadHoldR(-1))  // enables/disables debug menu
+    if (al::isPadTriggerUp(-1) && al::isPadHoldL(-1))  // enables/disables debug menu
     {
         showMenu = !showMenu;
     }

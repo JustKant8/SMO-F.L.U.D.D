@@ -404,12 +404,19 @@ void FLUDD::updateFludd() {
         }
 
         // changing fludds mode
+        if (stickActive && al::isPadTriggerPressLeftStick(-1)) {
+            changeFluddModeL();
+        }
         if (al::isPadTriggerLeft(-1)) {
             changeFluddModeL();
         }
         if (al::isPadTriggerRight(-1)) {
             changeFluddModeR();
         }
+        if (al::isPadHoldL(-1) && al::isPadTriggerPressLeftStick(-1)) {
+            stickActive = !stickActive;
+        }
+        
 
         //Stage/scene change fludd setup
         if (stageChange) {
@@ -454,11 +461,6 @@ void FLUDD::updateFludd() {
 
 int FLUDD::getFluddMode() {
     return fluddMode;
-}
-
-float FLUDD::calcRocketTimerPercent()
-{
-    return sead::MathCalcCommon<float>::max(sead::MathCalcCommon<float>::min(chargeTimer / 100.f, 1.f), 0.05f);
 }
 
 void FLUDD::setRefs() {

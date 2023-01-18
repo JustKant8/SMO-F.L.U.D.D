@@ -79,6 +79,7 @@ public:
     float fluddDischarge = 0.1f;
 
     bool active = false;
+    bool stickActive = false;
 
 
     //update

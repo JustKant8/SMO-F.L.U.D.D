@@ -54,6 +54,3 @@ B59E28: // sead::system::print
 //    RET
 
 85C710 B triggerR
-
-//4855fc B reduceOxygenForce // Forces ring to appear even if not in water
-//45ec88 B oxygenReduce // Updates the oxygen

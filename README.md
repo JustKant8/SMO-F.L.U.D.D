@@ -11,6 +11,11 @@ When released there will be a download link in this github or an alternate downl
 - Hover - hold (R) while in the air
 - Rocket - hold (R) to charge and press(A) when ready
 - Turbo - hold (R) to charge while on ground/water when ready
+      -- (in water) hold(A) move up, hold(B) move down
+- Switch Modes: left D-pad (normal rotation), right D-pad (opposite rotation)
+	--alt: You can change modes by pressing down left stick (togglable with hold(L), press down on left stick)
+
+-ex. Debug menu is hold(L), press up on D-pad(in game controls are found there)
 
 ## Prerequisites
 
