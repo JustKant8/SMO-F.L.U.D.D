@@ -4,18 +4,23 @@ This repo contains a modification to Super Mario Odyssey that adds Fludd (the je
 
 ## Download
 
-When released there will be a download link in this github or an alternate download on GameBanana. Note: This only works for SMO version.1.0.0
+When released there will be a download link(in release tab) in this github or an alternate download on GameBanana. Note: This only works for SMO version.1.0.0
 
 ## Controls
 
 - Hover - hold (R) while in the air
 - Rocket - hold (R) to charge and press(A) when ready
+<<<<<<< HEAD
 - Turbo - hold (R) to charge while on ground/water when ready
       -- (in water) hold(A) move up, hold(B) move down
 - Switch Modes: left D-pad (normal rotation), right D-pad (opposite rotation)
 	--alt: You can change modes by pressing down left stick (togglable with hold(L), press down on left stick)
 
 -ex. Debug menu is hold(L), press up on D-pad(in game controls are found there)
+=======
+- Turbo - hold (R) to charge and move on ground/water when ready
+       - When in water: hold (A) to move up, hold (B) to move down
+>>>>>>> 90d3d5177c67945c25406a4f8b0cb999661b28c2
 
 ## Prerequisites
 
