@@ -53,15 +53,6 @@ bool FLUDD::isTankEmpty(float f1) {
         
 }
 
-bool FLUDD::isChargeTimerFull()
-{
-    if (chargeTimer == 100.0f) {
-        return true;
-    }
-    else
-        return false;
-}
-
 void FLUDD::fluddTankFill()
 {
     tank = 100.0f;
@@ -118,28 +109,26 @@ void FLUDD::setFluddModeValues()
         tankRunoutVal = 34.0f;
         tStopValueSet = false;
         recharging = false;
-        if (!isHack && !is2D) {
+        if (!isHack && !is2D && !rs::isActiveDemo(mario)) {
             al::showModelIfHide(hover);
             al::hideModelIfShow(rocket);
             al::hideModelIfShow(turbo);
         }
-        
     }
     else if (fluddMode == 1) {  // Rocket Fludd
         fluddVel = 90.0f;
-        fluddDischarge = tankRunoutVal/2; // "/"2 for frame perfect double rocket boost
+        fluddDischarge = tankRunoutVal/3; // "/"2 for frame perfect double rocket boost
         fluddRecharge = 0.4f;
         chargeTimer = 100.0f;
         chargeTimerDecrease = 1.5f; 
         tankRunoutVal = 33.3f;
         tStopValueSet = false;
         recharging = false;
-        if (!isHack && !is2D) {
+        if (!isHack && !is2D && !rs::isActiveDemo(mario)) {
             al::showModelIfHide(rocket);
             al::hideModelIfShow(hover);
             al::hideModelIfShow(turbo);
         }
-        
     }
     else if (fluddMode == 2 || fluddMode < 0) {  //Turbo Fludd
         fluddMode = 2;
@@ -150,22 +139,20 @@ void FLUDD::setFluddModeValues()
         tankRunoutVal = 100.0f;
         tStopValueSet = false;
         recharging = false;
-        if (!isHack && !is2D) {
+        if (!isHack && !is2D && !rs::isActiveDemo(mario)) {
             al::showModelIfHide(turbo);
             al::hideModelIfShow(rocket);
             al::hideModelIfShow(hover);
         }
-        
     }
 }
 
 void FLUDD::activateFludd() {
-    active = true;
 
      if (chargeTimer == 0.0f) {
         if (fluddMode == 0){//HOVER
              if (!is2D) {
-                 al::setVelocityY(mario, smoothVelocity(al::getVelocity(mario).y, fluddVel, -1));  // boost velocity, al::setVelocityY
+                 al::setVelocityY(mario, smoothVelocity(al::getVelocity(mario).y, fluddVel, -1));
              } else {
                  sead::Vector3f g = al::getGravity(mario);
                      al::setVelocityY(mario, smoothVelocity(al::getVelocity(mario).y, -1 * g.y * fluddVel, g.y));
@@ -174,11 +161,12 @@ void FLUDD::activateFludd() {
                 mario->mPlayerAnimator->isAnim("JumpBroad2") ||
                 mario->mPlayerAnimator->isAnim("JumpBroad3") ||
                 mario->mPlayerAnimator->isAnim("HeadSliding") ||
-                mario->mPlayerAnimator->isAnim("DiveInWater")) {
+                mario->mPlayerAnimator->isAnim("DiveInWater") ||
+                mario->mPlayerAnimator->isAnim("HeadSlidingStart")) {
                 mario->mPlayerAnimator->startAnim(action);
             }
-            base->activate(mario);
-            hover->activate(base, true);  // hover effects
+            base->activate();
+            hover->activate(true);  // hover effects
             if (!is2D) {
                 jetOne->activate(hover, "jnt_nozzle_R", true);
                 jetTwo->activate(hover, "jnt_nozzle_L", true);
@@ -191,12 +179,13 @@ void FLUDD::activateFludd() {
                 mario->mPlayerAnimator->isAnim("JumpBroad2") ||
                 mario->mPlayerAnimator->isAnim("JumpBroad3") ||
                 mario->mPlayerAnimator->isAnim("HeadSliding") ||
-                mario->mPlayerAnimator->isAnim("DiveInWater")) {
+                mario->mPlayerAnimator->isAnim("DiveInWater") ||
+                mario->mPlayerAnimator->isAnim("HeadSlidingStart")) {
                 mario->mPlayerAnimator->startAnim(action);
             }
             if (!is2D) {
-                base->activate(mario);
-                rocket->activate(base, true);  // rocket effects
+                base->activate();
+                rocket->activate(true);  // rocket effects
             }
             lJCancel = true;
             tank -= fluddDischarge;
@@ -210,19 +199,17 @@ void FLUDD::activateFludd() {
                     } else if (al::isPadHoldB(-1)) {
                         al::setVelocityY(mario, -6.0f);
                     }
-                    base->activate(mario);
+                    base->activate();
                     
                     if (isPGrounded) {
-                        turbo->activate(base, true);
+                        turbo->activate(true);
                     }
                     else {
-                        turbo->activate(base, false);
-                        al::emitEffect(
-                            mario->mPlayerAnimator->mModelHolder->findModelActor("Normal"),
-                            "StateIce", al::getTransPtr(mario));
+                        turbo->activate(false);
+                        al::emitEffect(mario->mPlayerAnimator->mModelHolder->findModelActor("Normal"),"StateIce", al::getTransPtr(mario));
                     }
                 
-                tank -= fluddDischarge;
+                tank -= fluddDischarge/2;
             } else if (isPGrounded) {
                 if (setNrvGrounded) {
                     mario->setNerveOnGround();
@@ -230,9 +217,9 @@ void FLUDD::activateFludd() {
                 }
                 al::setVelocityToFront(mario, 40.0f);  // movement speed(ground)
                 al::setVelocityY(mario, -5.0f);
-                base->activate(mario);
+                base->activate();
                 if (!is2D) {
-                    turbo->activate(base, true);  // turbo effects
+                    turbo->activate(true);  // turbo effects
                 }
                 tank -= fluddDischarge;
             }
@@ -266,17 +253,15 @@ float FLUDD::smoothVelocity(float from, float to, float g) {
 
 void FLUDD::deactivateFludd()
 { 
-    active = false;
     //deactivates effects(sound/visual)
     base->deactivate();
     hover->deactivate();
-    if (al::getVelocity(mario).y < 1)
+    if (al::getVelocity(mario).y < 5)
         rocket->deactivate();
     turbo->deactivate();
     jetOne->deactivate();
     jetTwo->deactivate();
-    al::tryDeleteEffect(mario->mPlayerAnimator->mModelHolder->findModelActor("Normal"),
-                        "StateIce");
+    al::tryDeleteEffect(mario->mPlayerAnimator->mModelHolder->findModelActor("Normal"),"StateIce");
 
     
 
@@ -317,7 +302,13 @@ float FLUDD::stopTankValue() {
     return val;
 }
 
-void FLUDD::updateTankWaterLyt() {
+void FLUDD::updateLayout() {
+
+    if (stickActive) {
+        al::showPane(layout, "LStick");
+    } else {
+        al::hidePane(layout, "LStick");
+    }
 
     if (fluddMode == 0)
     {
@@ -372,9 +363,8 @@ void FLUDD::updateTankWaterLyt() {
 void FLUDD::updateFludd() {
     //set all references
     if (mario) {
-        isMario = true;
         setRefs();
-        
+
         //rolling effect
         if (mario->mPlayerAnimator->curAnim == "Rolling" && isPGrounded) {
             al::emitEffect(mario->mPlayerAnimator->mModelHolder->findModelActor("Normal"), "MofumofuDemoOpening2LandWet", al::getTransPtr(mario));
@@ -383,7 +373,7 @@ void FLUDD::updateFludd() {
         }
 
         //fludd setup when swap between 2d or hack
-        if (isHack || is2D) {
+        /* if (isHack || is2D) {
             al::hideModelIfShow(base);
             al::hideModelIfShow(rocket);
             al::hideModelIfShow(hover);
@@ -401,19 +391,19 @@ void FLUDD::updateFludd() {
             jetTwo->activate(hover, "jnt_nozzle_L", false);
             deactivateFludd();
             doOnce = false;
-        }
+        }*/
 
         // changing fludds mode
-        if (stickActive && al::isPadTriggerPressLeftStick(-1)) {
+        if (stickActive && al::isPadTriggerPressLeftStick(-1) && !al::isPadHoldL(-1)) { //left stick press(toggle)
             changeFluddModeL();
         }
-        if (al::isPadTriggerLeft(-1)) {
+        if (al::isPadTriggerLeft(-1)) { //left d-pad
             changeFluddModeL();
         }
-        if (al::isPadTriggerRight(-1)) {
+        if (al::isPadTriggerRight(-1)) { //right d-pad
             changeFluddModeR();
         }
-        if (al::isPadHoldL(-1) && al::isPadTriggerPressLeftStick(-1)) {
+        if (al::isPadHoldL(-1) && al::isPadTriggerPressLeftStick(-1)) { //to toggle left stick press
             stickActive = !stickActive;
         }
         
@@ -422,11 +412,16 @@ void FLUDD::updateFludd() {
         if (stageChange) {
             firstTimeSetup();
             stageChange = false;
-        }
+        } //else {
+            
+        //}
+
+        // new fludd setup
+        updateModels();
 
         // fludd layout
         if (layout->mIsAlive) {
-            updateTankWaterLyt();
+            updateLayout();
         }
 
         //sets stop value
@@ -470,6 +465,7 @@ void FLUDD::setRefs() {
     } else {
         isHack = false;
     }
+    marioModel = mario->mPlayerAnimator->mModelHolder->currentModel->mLiveActor;
     is2D = mario->mDimKeeper->is2D;
     isPGrounded = rs::isPlayerOnGround(mario);
     layout = stageSceneRef->stageSceneLayout->mCoinCountLyt;
@@ -477,13 +473,14 @@ void FLUDD::setRefs() {
     isPInWater = al::isInWaterPos(mario, al::getTrans(mario));
 }
 
-void FLUDD::firstTimeSetup() {
-    base->activate(mario);
+void FLUDD::firstTimeSetup() { // starts anim to fix rotation issue
+    base->activate();
     setFluddModeValues();
     resetLayout();
-    hover->activate(base, false);
-    rocket->activate(base, false);
-    turbo->activate(base, false);
+    hover->activate(false);
+    rocket->activate(false);
+    turbo->activate(false);
+    
 }
 
 bool FLUDD::canFluddActivate() {
@@ -509,7 +506,7 @@ bool FLUDD::canFluddActivate() {
             jetTwo->deactivate();
             turbo->deactivate();
             hover->deactivate();
-            if (!isPUnderWater && !isPGrounded) {
+            if (!isPInWater && !isPGrounded) {
                 return true;
             }
         }
@@ -531,46 +528,26 @@ bool FLUDD::canFluddActivate() {
     }
 
     return false;
-
-
-
-    /* if (!al::isPadHoldR(-1)) {  // this should be first check made before activation
-        return false;
-    }
-
-        if (isHack || PlayerFunction::isPlayerDeadStatus(mario) || rs::isActiveDemo(mario) ||
-        isTankEmpty(tankStopValue) || !recharging) {  // these checks apply to all fludd modes
-            return false;
-        }
-
-        if (isTankEmpty(tankStopValue)) {
-            recharging = true;
-        }
-
-        switch (fluddMode) {
-        case 0:  // HOVER
-        {
-            if (!isPGrounded && !isPUnderWater) {
-                canActivate = true;
-            }
-        } break;
-        case 1:  // ROCKET
-        {
-            if (!isPGrounded && !isPUnderWater) {
-                canActivate = true;
-            }
-        } break;
-        case 2:  // TURBO
-        {
-            if (mario->mPlayerInput->isMove()) {  // checks if mario is moving
-                if (isPGrounded || isPInWater) {
-                    canActivate = true;
-                }
-            }
-        } break;
-        default:
-            canActivate = false;
-            break;
-        }*/
-
 }
+
+void FLUDD::updateModels() {
+    if (is2D || isHack || rs::isActiveDemo(mario)) {
+            al::hideModelIfShow(base);
+            al::hideModelIfShow(rocket);
+            al::hideModelIfShow(hover);
+            al::hideModelIfShow(turbo);
+            doOnce = true;
+        
+    } else {
+        if (doOnce) {
+            al::showModelIfHide(base);
+            setFluddModeValues();
+            doOnce = false;
+        }
+        base->connect(marioModel);
+        hover->connect(base);
+        rocket->connect(base);
+        turbo->connect(base);
+    }
+}
+

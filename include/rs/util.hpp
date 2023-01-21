@@ -43,6 +43,8 @@ namespace rs
 
     bool isActiveDemoWithPlayer(al::Scene const *);
 
+    bool isActiveDemoWithPlayer(al::LiveActor const*);
+
     bool isActiveDemoWithPlayerKeepCarry(al::Scene const *);
 
     bool isActiveDemoWithPlayerUseCoin(al::Scene const *);
@@ -66,5 +68,7 @@ namespace rs
     PlayerActorHakoniwa* getPlayerActor(const al::Scene*);
 
     bool isPlayerInWater(al::LiveActor const*);
+
+    sead::Vector3f* getDemoPlayerTrans(al::LiveActor const*);
 
     }

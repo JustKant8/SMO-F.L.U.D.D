@@ -22,13 +22,14 @@ void FluddRocket::init(al::ActorInitInfo const &info)
     
 }
 
-void FluddRocket::activate(al::LiveActor* fludd, bool startEffect) {
-    // al::setTrans(this, al::getTrans(mario));
-
-    if (!al::isMtxConnectorConnecting(mtxConnector) || al::calcDistance(this, fludd) > 50.0f) {
-        al::setTrans(this, al::getTrans(fludd));
-        al::attachMtxConnectorToJoint(mtxConnector, fludd, "nozzle_center");
+void FluddRocket::connect(LiveActor* f) {
+    if (!al::isMtxConnectorConnecting(mtxConnector) || al::calcDistance(this, f) > 50.0f) {
+        al::setTrans(this, al::getTrans(f));
+        al::attachMtxConnectorToJoint(mtxConnector, f, "nozzle_center");
     }
+}
+
+void FluddRocket::activate(bool startEffect) {
 
     al::tryStartActionIfNotPlaying(this, "Shoot");
 
@@ -44,7 +45,6 @@ void FluddRocket::activate(al::LiveActor* fludd, bool startEffect) {
 void FluddRocket::deactivate() {
 
     al::tryDeleteEffect(this, "WaterRoadMove");
-    //al::stopAction(this);
     al::setSklAnimFrame(this, 0, 0);
 }
 

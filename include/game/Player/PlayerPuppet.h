@@ -16,4 +16,8 @@ class PlayerPuppet {
 
         void validateCollisionCheck(void);
         void validateSensor(void);
+
+        void keepOn2D();
+
+        PlayerAnimator* mPlayerAnimator;
 };

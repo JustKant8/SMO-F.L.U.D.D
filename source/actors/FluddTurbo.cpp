@@ -22,13 +22,14 @@ void FluddTurbo::init(al::ActorInitInfo const &info)
     
 }
 
-void FluddTurbo::activate(al::LiveActor* fludd, bool startEffect) {
-    // al::setTrans(this, al::getTrans(mario));
-
-    if (!al::isMtxConnectorConnecting(mtxConnector) || al::calcDistance(this, fludd) > 50.0f) {
-        al::setTrans(this, al::getTrans(fludd));
-        al::attachMtxConnectorToJoint(mtxConnector, fludd, "nozzle_center");
+void FluddTurbo::connect(LiveActor* f) {
+    if (!al::isMtxConnectorConnecting(mtxConnector) || al::calcDistance(this, f) > 50.0f) {
+        al::setTrans(this, al::getTrans(f));
+        al::attachMtxConnectorToJoint(mtxConnector, f, "nozzle_center");
     }
+}
+
+void FluddTurbo::activate(bool startEffect) {
 
     al::tryStartActionIfNotPlaying(this, "OldShoot");
 

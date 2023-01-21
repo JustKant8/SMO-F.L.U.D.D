@@ -16,7 +16,6 @@
 #include "actors/FluddRocket.hpp"
 #include "actors/HoverWater.hpp"
 
-
 class FLUDD{
 private:
     //Fludd settings/values
@@ -25,12 +24,14 @@ private:
     float fluddRecharge = 1.0f;
     
     float fluddVel = 2.8f; //start off as hover velocity
-    float chargeTimer = 0.0f; //replaces oxygen meter
+    float chargeTimer = 0.0f; //charge-up bar
     float chargeTimerDecrease = 1.5f;
     float tankStopValue = 0.0f;
     float tankRunoutVal = 33.3f;
     bool recharging = false;
     int turboWaterDelay = 0;
+
+    bool modelsInit = false;
 
     //Layout values
     sead::Vector2f tankWaterTrans = sead::Vector2f::zero;
@@ -44,11 +45,12 @@ private:
     void deactivateFludd();
     float smoothVelocity(float from, float to, float g);//smooth velocity transition
     float stopTankValue();
-    void updateTankWaterLyt();
+    void updateLayout();
+    void updateModels();
 
     //random
     bool tStopValueSet = false;
-    const sead::SafeString action = "Fall";
+    const sead::SafeString action = "Fall"; // hover/rocket anim
     
     
 public:
@@ -57,9 +59,9 @@ public:
     bool is2D;
     bool isHack;
     PlayerActorHakoniwa* mario;
+    al::LiveActor* marioModel;
     CoinCounter* layout;
 
-    bool isMario = false;
     bool lJCancel = false;
 
     //fludd parts
@@ -78,8 +80,7 @@ public:
     bool setNrvGrounded = false;
     float fluddDischarge = 0.1f;
 
-    bool active = false;
-    bool stickActive = false;
+    bool stickActive = false; //left stick active for mode change
 
 
     //update
@@ -90,21 +91,17 @@ public:
 
     //Is
     bool isTankEmpty(float f1); //Checks if tank is empty or not
-    bool isChargeTimerFull();
-    bool canFluddActivate(); //does all fludd checks
+    bool canFluddActivate(); //does most fludd checks
 
     //Setters
     void fluddTankFill();
     void changeFluddModeR(); //right d-pad press
-    void changeFluddModeL(); //left d-pad press
+    void changeFluddModeL(); //left d-pad press (or left stick press(toggleable))
     void setFluddModeValues();
     void resetLayout();
     void setRefs();
     void initModels(al::ActorInitInfo const& info);
     void firstTimeSetup();
-
-    //Calcs
-    float calcRocketTimerPercent();
 };
 
 FLUDD& Fludd();

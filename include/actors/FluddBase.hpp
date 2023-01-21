@@ -36,14 +36,16 @@ namespace ca {
         virtual void updateCollider();
 
         //Mtx connection/effects
-        void activate(PlayerActorHakoniwa* mario);
+        void activate();
 
         void deactivate();
 
         void exeWait(void);
 
+        void connect(LiveActor* m);
         
         bool isConnecting;
+
         private:
         al::MtxConnector* mtxConnector;
 

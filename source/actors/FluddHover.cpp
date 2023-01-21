@@ -22,13 +22,14 @@ void FluddHover::init(al::ActorInitInfo const &info)
     
 }
 
-void FluddHover::activate(al::LiveActor* fludd, bool startEffect) {
-    // al::setTrans(this, al::getTrans(mario));
-
-    if (!al::isMtxConnectorConnecting(mtxConnector) || al::calcDistance(this, fludd) > 50.0f) {
-        al::setTrans(this, al::getTrans(fludd));
-        al::attachMtxConnectorToJoint(mtxConnector, fludd, "nozzle_center");
+void FluddHover::connect(LiveActor* f) {
+    if (!al::isMtxConnectorConnecting(mtxConnector) || al::calcDistance(this, f) > 50.0f) {
+        al::setTrans(this, al::getTrans(f));
+        al::attachMtxConnectorToJoint(mtxConnector, f, "nozzle_center");
     }
+}
+
+void FluddHover::activate(bool startEffect) {
 
     al::tryStartActionIfNotPlaying(this, "Shoot");
 
@@ -36,13 +37,12 @@ void FluddHover::activate(al::LiveActor* fludd, bool startEffect) {
         al::setSklAnimFrame(this, 0, 0);
 
     if (startEffect) {
-        al::startSe(this, "PgWaterEmit");//PgWaterEmit
+        al::startSe(this, "WaterRoadMove_loop");//PgWaterEmit
     }
 }
 
 void FluddHover::deactivate() {
-    al::stopSe(this, "PgWaterEmit", 0, nullptr);
-    //al::stopAction(this);
+    al::stopSe(this, "WaterRoadMove_loop", 0, nullptr);
     al::setSklAnimFrame(this, 0, 0);
 }
 

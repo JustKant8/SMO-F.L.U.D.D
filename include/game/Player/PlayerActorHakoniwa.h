@@ -22,6 +22,7 @@
 #include "PlayerModelChangerHakoniwa.h"
 #include "PlayerFormSensorCollisionArranger.h"
 #include "PlayerInitInfo.h"
+#include "al/actor/DemoActor.h"
 
 #include "Attacks/PlayerSpinCapAttack.h"
 
@@ -44,7 +45,8 @@ class PlayerActorHakoniwa : public PlayerActorBase , public IUseDimension {
 
         
 
-        PlayerActorHakoniwa* getDemoActor();
+        al::DemoActor* getDemoActor(); //DemoActor
+        //PlayerPuppet* getPlayerPuppet();
 
         unsigned char padding[0x18]; // 0x108
         PlayerInfo *mPlayerInfo; // 0x128

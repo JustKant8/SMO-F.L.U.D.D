@@ -328,7 +328,9 @@ namespace al
 
     // audio
 
-    void tryPauseBgmIfLowPriority(al::IUseAudioKeeper const *keeper, const char *audioName, int unk);    
+    void tryPauseBgmIfLowPriority(al::IUseAudioKeeper const *keeper, const char *audioName, int unk); 
+
+
 
     // player stuff
 
@@ -584,5 +586,6 @@ namespace al
     void showModelIfHide(al::LiveActor*);
 
     void hideModelIfShow(al::LiveActor*);
+
     }
 

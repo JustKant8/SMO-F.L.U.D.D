@@ -105,6 +105,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
     PlayerActorHakoniwa* p1 = al::tryGetPlayerActor(pHolder, 0);
 
     sead::Vector3f* b = getTransPtr(Fludd().base);
+    sead::Vector3f* d = rs::getDemoPlayerTrans(p1);
 
     int dispWidth = al::getLayoutDisplayWidth();
     int dispHeight = al::getLayoutDisplayHeight();
@@ -142,18 +143,20 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 gTextWriter->printf("\nEnable Left Stick(mode change): \n");
                 gTextWriter->printf("Hold (L), press down left stick: %s\n", BTOC(Fludd().stickActive));
 
-                //gTextWriter->printf("-------Fludd Connectors-------\n");
-                //gTextWriter->printf("Fludd Base Connecting: %s \n", BTOC(Fludd().base->isConnecting));
-                //gTextWriter->printf("Fludd Hover Connecting: %s \n", BTOC(Fludd().hover->isConnecting));
-                //gTextWriter->printf("Fludd Rocket Connecting: %s \n", BTOC(Fludd().rocket->isConnecting));
-                //gTextWriter->printf("Fludd Turbo Connecting: %s \n", BTOC(Fludd().turbo->isConnecting));
+                gTextWriter->printf("-------Fludd Connectors-------\n");
+                gTextWriter->printf("Fludd Base Connecting: %s \n", BTOC(Fludd().base->isConnecting));
+                gTextWriter->printf("Fludd Hover Connecting: %s \n", BTOC(Fludd().hover->isConnecting));
+                gTextWriter->printf("Fludd Rocket Connecting: %s \n", BTOC(Fludd().rocket->isConnecting));
+                gTextWriter->printf("Fludd Turbo Connecting: %s \n", BTOC(Fludd().turbo->isConnecting));
 
 
-                //gTextWriter->printf("Current Fludd mode: %i \n", Fludd().getFluddMode());
-                //gTextWriter->printf("Fludd Base Position: %f, %f, %f \n", b->x, b->y, b->z);
-                //gTextWriter->printf("Is stage changed: %s \n", BTOC(Fludd().stageChange));
+                gTextWriter->printf("Current Fludd mode: %i \n", Fludd().getFluddMode());
+                gTextWriter->printf("Fludd Base Position: %f, %f, %f \n", b->x, b->y, b->z);
+                gTextWriter->printf("Is stage changed: %s \n", BTOC(Fludd().stageChange));
 
-                //gTextWriter->printf("Is Fludd activated?: %s \n", BTOC(Fludd().active));
+                gTextWriter->printf("Mario Model: %s \n", Fludd().marioModel->mActorName);
+                gTextWriter->printf("Is in demo with player: %s \n", BTOC(rs::isActiveDemo(p1)));
+                gTextWriter->printf("Demo mario Position: %f, %f, %f \n", d->x, d->y, d->z);
         }
 
         isInGame = false;
@@ -207,7 +210,7 @@ bool hakoniwaSequenceHook(HakoniwaSequence* sequence) {
     StageScene* stageScene = (StageScene*)sequence->curScene;
 
     al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
-    PlayerActorHakoniwa* p1 = al::tryGetPlayerActor(pHolder, 0);
+    PlayerActorHakoniwa* p1 = al::tryGetPlayerActor(pHolder, 0);//tryGetPlayerActor pHolder, 0
 
     bool isFirstStep = al::isFirstStep(sequence);
 

@@ -37,11 +37,13 @@ namespace ca {
         virtual void updateCollider();
 
         // Mtx connection/effects
-        void activate(al::LiveActor* fludd, bool startEffect);
+        void activate(bool startEffect);
 
         void deactivate();
 
         void exeWait(void);
+
+        void connect(LiveActor* f);
 
         bool isConnecting;
 
