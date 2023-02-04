@@ -102,7 +102,11 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
     StageScene* stageScene = (StageScene*)curSequence->curScene;
 
     al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
-    PlayerActorHakoniwa* p1 = al::tryGetPlayerActor(pHolder, 0);
+    PlayerActorBase* base = al::tryGetPlayerActor(pHolder, 0);
+    PlayerActorHakoniwa* p1 = (PlayerActorHakoniwa*)al::tryGetPlayerActor(pHolder, 0);
+    YukimaruRacePlayer* y1 = (YukimaruRacePlayer*)al::tryGetPlayerActor(pHolder, 0);
+
+    bool isYukimaru = rs::isPlayerHackYukimaru(p1);
 
     sead::Vector3f* b = getTransPtr(Fludd().base);
     sead::Vector3f* d = rs::getDemoPlayerTrans(p1);
@@ -157,6 +161,9 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 gTextWriter->printf("Mario Model: %s \n", Fludd().marioModel->mActorName);
                 gTextWriter->printf("Is in demo with player: %s \n", BTOC(rs::isActiveDemo(p1)));
                 gTextWriter->printf("Demo mario Position: %f, %f, %f \n", d->x, d->y, d->z);
+
+                gTextWriter->printf("Mario: %s, Base: %s, Yuki: %s\n", p1->getName(), base->getName(), y1->getName());
+                gTextWriter->printf("Is mario Yukimaru: %s", BTOC(isYukimaru));
         }
 
         isInGame = false;
@@ -210,14 +217,16 @@ bool hakoniwaSequenceHook(HakoniwaSequence* sequence) {
     StageScene* stageScene = (StageScene*)sequence->curScene;
 
     al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
-    PlayerActorHakoniwa* p1 = al::tryGetPlayerActor(pHolder, 0);//tryGetPlayerActor pHolder, 0
-
+    PlayerActorBase* base = al::tryGetPlayerActor(pHolder, 0);
+    PlayerActorHakoniwa* p1 = (PlayerActorHakoniwa*)al::tryGetPlayerActor(pHolder, 0);
     bool isFirstStep = al::isFirstStep(sequence);
 
     if (al::isPadTriggerUp(-1) && al::isPadHoldL(-1))  // enables/disables debug menu
     {
         showMenu = !showMenu;
     }
+
+    bool isYukimaru = rs::isPlayerHackYukimaru(p1);
 
     
     Fludd().stageSceneRef = stageScene;
@@ -226,7 +235,7 @@ bool hakoniwaSequenceHook(HakoniwaSequence* sequence) {
     isInGame = !stageScene->isPause();
 
     // Fludd code
-    if (!stageScene->isPause())
+    if (!stageScene->isPause() && !isYukimaru)
         Fludd().updateFludd();
 
     return isFirstStep;

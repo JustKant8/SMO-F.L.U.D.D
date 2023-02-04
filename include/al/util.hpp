@@ -67,9 +67,9 @@ namespace al
 
     al::PlayerHolder *getScenePlayerHolder(al::Scene const *);
 
-    PlayerActorHakoniwa *getPlayerActor(al::LiveActor const *, int);
+    PlayerActorBase *getPlayerActor(al::LiveActor const *, int);
 
-    PlayerActorHakoniwa *tryGetPlayerActor(al::PlayerHolder const *, int);
+    PlayerActorBase *tryGetPlayerActor(al::PlayerHolder const *, int);
 
     sead::Heap *getCurrentHeap(void);
 

@@ -172,59 +172,77 @@ void FLUDD::activateFludd() {
                 jetTwo->activate(hover, "jnt_nozzle_L", true);
             }
             tank -= fluddDischarge;
-        }
-        else if (fluddMode == 1 && al::isPadHoldA(-1) && !isPGrounded) {// ROCKET
-            al::setVelocityY(mario, fluddVel);  // boost velocity
-            if (mario->mPlayerAnimator->isAnim("JumpBroad") ||
-                mario->mPlayerAnimator->isAnim("JumpBroad2") ||
-                mario->mPlayerAnimator->isAnim("JumpBroad3") ||
-                mario->mPlayerAnimator->isAnim("HeadSliding") ||
-                mario->mPlayerAnimator->isAnim("DiveInWater") ||
-                mario->mPlayerAnimator->isAnim("HeadSlidingStart")) {
-                mario->mPlayerAnimator->startAnim(action);
+        } else if (fluddMode == 1 && !isPGrounded) {  // ROCKET
+            if (al::isPadHoldA(-1)) {
+                if (isFirstBoost) {
+                    al::setVelocityY(mario, fluddVel);  // boost velocity
+                    if (mario->mPlayerAnimator->isAnim("JumpBroad") ||
+                        mario->mPlayerAnimator->isAnim("JumpBroad2") ||
+                        mario->mPlayerAnimator->isAnim("JumpBroad3") ||
+                        mario->mPlayerAnimator->isAnim("HeadSliding") ||
+                        mario->mPlayerAnimator->isAnim("DiveInWater") ||
+                        mario->mPlayerAnimator->isAnim("HeadSlidingStart")) {
+                        mario->mPlayerAnimator->startAnim(action);
+                    }
+                    if (!is2D) {
+                        base->activate();
+                        rocket->activate(true);  // rocket effects
+                    }
+                    lJCancel = true;
+
+                    if (isFirstBoost) {
+                        tank -= fluddDischarge;
+                        isFirstBoost = false;
+                    }
+                } else {
+                    doubleBoostFrames += 1;
+                    if (doubleBoostFrames >= 1) {
+                        tank -= fluddDischarge;
+                    }
+                }
+            } else {
+                if (doubleBoostFrames < 1 && !isFirstBoost) {
+                    isFirstBoost = true;
+                    doubleBoostFrames = 0;
+                }
             }
-            if (!is2D) {
-                base->activate();
-                rocket->activate(true);  // rocket effects
-            }
-            lJCancel = true;
-            tank -= fluddDischarge;
         }
-        else if (fluddMode == 2) {  // TURBO
-            if (isPInWater) {
-                al::setVelocityToFront(mario, 30.0f);  // movement speed(water)
-                
+            else if (fluddMode == 2) {  // TURBO
+                if (isPInWater) {
+                    al::setVelocityToFront(mario, 30.0f);  // movement speed(water)
+
                     if (al::isPadHoldA(-1)) {
                         al::setVelocityY(mario, 6.0f);
                     } else if (al::isPadHoldB(-1)) {
                         al::setVelocityY(mario, -6.0f);
                     }
                     base->activate();
-                    
+
                     if (isPGrounded) {
                         turbo->activate(true);
-                    }
-                    else {
+                    } else {
                         turbo->activate(false);
-                        al::emitEffect(mario->mPlayerAnimator->mModelHolder->findModelActor("Normal"),"StateIce", al::getTransPtr(mario));
+                        al::emitEffect(
+                            mario->mPlayerAnimator->mModelHolder->findModelActor("Normal"),
+                            "StateIce", al::getTransPtr(mario));
                     }
-                
-                tank -= fluddDischarge/2;
-            } else if (isPGrounded) {
-                if (setNrvGrounded) {
-                    mario->setNerveOnGround();
-                    setNrvGrounded = false;
+
+                    tank -= fluddDischarge / 2;
+                } else if (isPGrounded) {
+                    if (setNrvGrounded) {
+                        mario->setNerveOnGround();
+                        setNrvGrounded = false;
+                    }
+                    al::setVelocityToFront(mario, 40.0f);  // movement speed(ground)
+                    al::setVelocityY(mario, -5.0f);
+                    base->activate();
+                    if (!is2D) {
+                        turbo->activate(true);  // turbo effects
+                    }
+                    tank -= fluddDischarge;
                 }
-                al::setVelocityToFront(mario, 40.0f);  // movement speed(ground)
-                al::setVelocityY(mario, -5.0f);
-                base->activate();
-                if (!is2D) {
-                    turbo->activate(true);  // turbo effects
-                }
-                tank -= fluddDischarge;
-            }
             
-        }
+            }
     }
     
 }
@@ -282,6 +300,8 @@ void FLUDD::deactivateFludd()
                 recharging = false;
             } else if (fluddMode != 0 && chargeTimer >= 100.0f) {
                 chargeTimer = 100.0f;
+                isFirstBoost = true;
+                doubleBoostFrames = 0;
                 recharging = false;
             }
 
@@ -371,27 +391,6 @@ void FLUDD::updateFludd() {
         } else {
             al::tryDeleteEffect(mario->mPlayerAnimator->mModelHolder->findModelActor("Normal"), "MofumofuDemoOpening2LandWet");  // DashFastPuddle
         }
-
-        //fludd setup when swap between 2d or hack
-        /* if (isHack || is2D) {
-            al::hideModelIfShow(base);
-            al::hideModelIfShow(rocket);
-            al::hideModelIfShow(hover);
-            al::hideModelIfShow(turbo);
-            doOnce = true;
-        }
-        else if (!isHack && !is2D && doOnce) {
-            al::showModelIfHide(base);
-            setFluddModeValues();
-            base->activate(mario);
-            hover->activate(base, false);
-            rocket->activate(base, false);
-            turbo->activate(base, false);
-            jetOne->activate(hover, "jnt_nozzle_R", false);
-            jetTwo->activate(hover, "jnt_nozzle_L", false);
-            deactivateFludd();
-            doOnce = false;
-        }*/
 
         // changing fludds mode
         if (stickActive && al::isPadTriggerPressLeftStick(-1) && !al::isPadHoldL(-1)) { //left stick press(toggle)

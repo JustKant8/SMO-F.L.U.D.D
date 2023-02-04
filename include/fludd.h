@@ -32,6 +32,8 @@ private:
     int turboWaterDelay = 0;
 
     bool modelsInit = false;
+    int doubleBoostFrames = 0;
+    bool isFirstBoost = true;
 
     //Layout values
     sead::Vector2f tankWaterTrans = sead::Vector2f::zero;

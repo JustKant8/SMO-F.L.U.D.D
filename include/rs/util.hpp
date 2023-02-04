@@ -71,4 +71,6 @@ namespace rs
 
     sead::Vector3f* getDemoPlayerTrans(al::LiveActor const*);
 
+    bool isPlayerHackYukimaru(al::LiveActor const*);
+
     }
