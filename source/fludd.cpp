@@ -117,11 +117,11 @@ void FLUDD::setFluddModeValues()
     }
     else if (fluddMode == 1) {  // Rocket Fludd
         fluddVel = 90.0f;
-        fluddDischarge = tankRunoutVal/3; // "/"2 for frame perfect double rocket boost
         fluddRecharge = 0.4f;
         chargeTimer = 100.0f;
         chargeTimerDecrease = 1.5f; 
         tankRunoutVal = 33.3f;
+        fluddDischarge = tankRunoutVal / 2;  // "/"2 for frame perfect double rocket boost
         tStopValueSet = false;
         recharging = false;
         if (!isHack && !is2D && !rs::isActiveDemo(mario)) {
