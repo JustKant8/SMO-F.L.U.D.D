@@ -9,6 +9,8 @@
 #include "actors/FluddHover.hpp"
 #include "actors/FluddRocket.hpp"
 #include "actors/HoverWater.hpp"
+#include "actors/FluddNormal.hpp"
+#include "actors/RocketItem.hpp"
 
 namespace al
 {
@@ -79,6 +81,8 @@ static al::NameToCreator<al::createActor> actorEntries[] = {
     {"FluddHover", &ca::createCustomActor<ca::FluddHover>},
     {"FluddRocket", &ca::createCustomActor<ca::FluddRocket>},
     {"HoverWater", &ca::createCustomActor<ca::HoverWater>},
+    {"FluddNormal", &ca::createCustomActor<ca::FluddNormal>},
+    {"RocketItem", &ca::createCustomActor<ca::RocketItem>},
     // VANILLA ACTOR ENTRIES
     {"AchievementNpc", &al::createActorFunction<class AchievementNpc>},
     {"AirBubble", &al::createActorFunction<class AirBubble>},

@@ -3,6 +3,7 @@
 #include "al/scene/Scene.h"
 #include "game/StageScene/StageSceneLayout.h"
 #include "game/StageScene/StageSceneStatePauseMenu.h"
+#include "game/Player/PlayerCameraTarget.h"
 
 #define INHERITSIZE sizeof(al::Scene)
 
@@ -22,4 +23,6 @@ class StageScene : public al::Scene
         GameDataHolderAccessor mHolder; // 0x2D0
         unsigned char padding_2F8[0x20];
         StageSceneLayout *stageSceneLayout; // 0x2F8
+
+        PlayerCameraTarget* cameraTarget;
 };

@@ -18,4 +18,7 @@ void makeQuatFrontUp(sead::Quatf *, const sead::Vector3f &,
 
 float calcAngleOnPlaneDegree(sead::Vector3f const&,sead::Vector3f const&,sead::Vector3f const&);
 
+void rotateVectorDegree(sead::Vector3f* output, const sead::Vector3f& dir,
+                        const sead::Vector3f& axis, float angle);
+
 }  // namespace al

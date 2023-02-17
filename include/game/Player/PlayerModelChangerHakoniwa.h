@@ -10,4 +10,6 @@ class PlayerPainPartsKeeper;
 class PlayerModelChangerHakoniwa {
     public:
         PlayerModelChangerHakoniwa(al::LiveActor const *, PlayerModelHolder *, PlayerPainPartsKeeper *, PlayerCostumeInfo *, IUseDimension const *);
+
+        const char* getModelName();
 };

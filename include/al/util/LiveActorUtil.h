@@ -161,7 +161,11 @@ namespace al {
 
     void makeQuatUpFront(sead::Quatf *, sead::Vector3f const &, sead::Vector3f const &);
 
-    void rotateQuatYDirDegree(LiveActor *, float);
+    void rotateQuatXDirDegree(LiveActor *, float);
+
+    void rotateQuatYDirDegree(LiveActor*, float);
+
+    void rotateQuatZDirDegree(LiveActor*, float);
 
     f32* findActorParamF32(const LiveActor*, const char*);
 

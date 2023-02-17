@@ -5,6 +5,7 @@
 #include "al/sensor/SensorMsg.h"
 #include "game/Player/PlayerActorHakoniwa.h"
 #include "al/area/ChangeStageInfo.h"
+#include "game/Player/PlayerActorBase.h"
 
 namespace rs
 {
@@ -65,10 +66,14 @@ namespace rs
 
     void calcPlayerFrontDir(sead::Vector3f *result, al::LiveActor const *);
 
-    PlayerActorHakoniwa* getPlayerActor(const al::Scene*);
+    PlayerActorBase* getPlayerActor(const al::Scene*);
 
     bool isPlayerInWater(al::LiveActor const*);
 
     sead::Vector3f* getDemoPlayerTrans(al::LiveActor const*);
+
+    bool isPlayerHackYukimaru(al::LiveActor const*);
+
+    
 
     }

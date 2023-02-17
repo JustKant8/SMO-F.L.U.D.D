@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "container/seadSafeArray.h"
+#include "game/Player/PlayerActorBase.h"
 #include "game/Player/PlayerActorHakoniwa.h"
 #include "game/Player/PlayerModelHolder.h"
 #include "game/StageScene/StageScene.h"
@@ -15,11 +16,13 @@
 #include "actors/FluddHover.hpp"
 #include "actors/FluddRocket.hpp"
 #include "actors/HoverWater.hpp"
+#include "actors/FluddNormal.hpp"
+#include "actors/RocketItem.hpp"
 
 class FLUDD{
 private:
     //Fludd settings/values
-    int fluddMode = 0;    // Modes: 0 = hover, 1 = rocket, 2 = turbo
+    int fluddMode = 0;    // Modes: 0 = hover, 1 = rocket, 2 = turbo, 3 = normal
     float tank = 100.0f; //0 = empty, 100 = full
     float fluddRecharge = 1.0f;
     
@@ -32,6 +35,8 @@ private:
     int turboWaterDelay = 0;
 
     bool modelsInit = false;
+    int doubleBoostFrames = 0;
+    bool isFirstBoost = true;
 
     //Layout values
     sead::Vector2f tankWaterTrans = sead::Vector2f::zero;
@@ -58,9 +63,11 @@ public:
     StageScene* stageSceneRef;
     bool is2D;
     bool isHack;
+    PlayerActorBase* playerBase;
     PlayerActorHakoniwa* mario;
     al::LiveActor* marioModel;
     CoinCounter* layout;
+    al::CameraTicket* rocketCamera;
 
     bool lJCancel = false;
 
@@ -71,6 +78,8 @@ public:
     ca::FluddRocket* rocket;
     ca::HoverWater* jetOne;
     ca::HoverWater* jetTwo;
+    ca::FluddNormal* normal;
+    ca::RocketItem* rocketItem;
 
     bool isPUnderWater = false;
     bool isPInWater = false;
@@ -102,6 +111,9 @@ public:
     void setRefs();
     void initModels(al::ActorInitInfo const& info);
     void firstTimeSetup();
+    void setMarioPtr(PlayerActorHakoniwa* m);
+
+
 };
 
 FLUDD& Fludd();

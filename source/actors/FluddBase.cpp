@@ -19,7 +19,7 @@ void FluddBase::init(al::ActorInitInfo const &info)
 }
 
 void FluddBase::connect(LiveActor* m) {
-    if (!al::isMtxConnectorConnecting(mtxConnector) || al::calcDistance(this, m) > 50.0f) {
+    if (!al::isMtxConnectorConnecting(mtxConnector) || al::calcDistance(this, m) > 50.0f) { 
         al::setTrans(this, al::getTrans(m));
         al::attachMtxConnectorToJoint(mtxConnector, m, "Spine1");
     }

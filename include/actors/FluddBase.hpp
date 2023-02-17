@@ -43,6 +43,7 @@ namespace ca {
         void exeWait(void);
 
         void connect(LiveActor* m);
+        //LiveActor* m
         
         bool isConnecting;
 

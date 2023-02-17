@@ -67,9 +67,9 @@ namespace al
 
     al::PlayerHolder *getScenePlayerHolder(al::Scene const *);
 
-    PlayerActorHakoniwa *getPlayerActor(al::LiveActor const *, int);
+    PlayerActorBase *getPlayerActor(al::LiveActor const *, int);
 
-    PlayerActorHakoniwa *tryGetPlayerActor(al::PlayerHolder const *, int);
+    PlayerActorBase *tryGetPlayerActor(al::PlayerHolder const *, int);
 
     sead::Heap *getCurrentHeap(void);
 
@@ -425,9 +425,11 @@ namespace al
     
     bool isSuccessSaveDataSequence();
 
-    void validateCollisionParts(al::LiveActor*);
+    void validateColliderRobustCheck(al::LiveActor*);
     
-    void invalidateCollisionParts(al::LiveActor *);
+    void invalidateColliderRobustCheck(al::LiveActor *);
+
+    void setColliderRadius(al::LiveActor*, float);
 
     bool isExistCollisionParts(const al::LiveActor *);
 
@@ -565,11 +567,25 @@ namespace al
 
     void attachMtxConnectorToActor(al::MtxConnector*, al::LiveActor const*);
 
+    void disconnectMtxConnector(al::MtxConnector*);
+
     sead::Matrix34f* getJointMtxPtr(const LiveActor*, const char*);
 
     bool isMtxConnectorConnecting(al::MtxConnector const*);
     
     void setRotate(al::LiveActor*, sead::Vector3<float> const&);
+
+    //void setRotateX();
+
+    void setRotateY(al::LiveActor*, float);
+
+    //sead::Quatf* getRotatePtr(al::LiveActor const*); not working
+
+    void calcQuatFront(sead::Vector3f*, al::LiveActor const*);
+
+    void calcQuatUp(sead::Vector3f*, al::LiveActor const*);
+
+    sead::Quatf* getQuatPtr(al::LiveActor*);
 
     bool isExistJoint(al::LiveActor const*, char const*);
 
@@ -586,6 +602,20 @@ namespace al
     void showModelIfHide(al::LiveActor*);
 
     void hideModelIfShow(al::LiveActor*);
+
+    bool isCollided(al::LiveActor const*);
+
+    void invalidateCollisionParts(al::LiveActor*);
+
+    void validateCollisionParts(al::LiveActor*);
+
+    bool isActiveCamera(al::CameraTicket const*);
+
+    const char* getPlayingVisAnimName(al::LiveActor const*);
+
+    const char* getModelName(al::LiveActor const*);
+
+    sead::Matrix34f* getJointMtxPtr(al::LiveActor const*, char const*);
 
     }
 

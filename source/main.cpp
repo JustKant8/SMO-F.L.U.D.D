@@ -99,13 +99,8 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
         return;
     }
 
-    StageScene* stageScene = (StageScene*)curSequence->curScene;
 
-    al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
-    PlayerActorHakoniwa* p1 = al::tryGetPlayerActor(pHolder, 0);
-
-    sead::Vector3f* b = getTransPtr(Fludd().base);
-    sead::Vector3f* d = rs::getDemoPlayerTrans(p1);
+    
 
     int dispWidth = al::getLayoutDisplayWidth();
     int dispHeight = al::getLayoutDisplayHeight();
@@ -123,6 +118,11 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
     if (curScene && isInGame)
     {
 
+        PlayerActorBase* playerBase = rs::getPlayerActor(curScene);
+
+        PlayerHackKeeper* hackKeeper = playerBase->getPlayerHackKeeper();
+
+
         drawBackground((agl::DrawContext *)drawContext);
 
         gTextWriter->beginDraw();
@@ -131,7 +131,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
 
         gTextWriter->setScaleFromFontHeight(20.f);
 
-        if (p1) {
+        if (hackKeeper) {
             
                 gTextWriter->printf("_______Fludd Controls_______\n");
                 gTextWriter->printf("Hover: Hold (R) - while in the air\n");
@@ -143,20 +143,15 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
                 gTextWriter->printf("\nEnable Left Stick(mode change): \n");
                 gTextWriter->printf("Hold (L), press down left stick: %s\n", BTOC(Fludd().stickActive));
 
-                gTextWriter->printf("-------Fludd Connectors-------\n");
-                gTextWriter->printf("Fludd Base Connecting: %s \n", BTOC(Fludd().base->isConnecting));
-                gTextWriter->printf("Fludd Hover Connecting: %s \n", BTOC(Fludd().hover->isConnecting));
-                gTextWriter->printf("Fludd Rocket Connecting: %s \n", BTOC(Fludd().rocket->isConnecting));
-                gTextWriter->printf("Fludd Turbo Connecting: %s \n", BTOC(Fludd().turbo->isConnecting));
+                //gTextWriter->printf("-------Fludd Connectors-------\n");
+                //gTextWriter->printf("Fludd RocketItem attacking: %s \n", BTOC(Fludd().rocketItem->isAttacking));
+                //gTextWriter->printf("Fludd RocketItem ReceiveMsg: %s \n", BTOC(Fludd().rocketItem->msgReceived));
+                //gTextWriter->printf("Fludd Rocket Item Connecting: %s \n", BTOC(Fludd().rocketItem->isConnecting));
+                //gTextWriter->printf("Fludd Turbo Connecting: %s \n", BTOC(Fludd().turbo->isConnecting));
 
 
                 gTextWriter->printf("Current Fludd mode: %i \n", Fludd().getFluddMode());
-                gTextWriter->printf("Fludd Base Position: %f, %f, %f \n", b->x, b->y, b->z);
-                gTextWriter->printf("Is stage changed: %s \n", BTOC(Fludd().stageChange));
-
-                gTextWriter->printf("Mario Model: %s \n", Fludd().marioModel->mActorName);
-                gTextWriter->printf("Is in demo with player: %s \n", BTOC(rs::isActiveDemo(p1)));
-                gTextWriter->printf("Demo mario Position: %f, %f, %f \n", d->x, d->y, d->z);
+                gTextWriter->printf("Is Hack: %s \n", BTOC(Fludd().isHack));
         }
 
         isInGame = false;
@@ -194,10 +189,10 @@ bool sceneKillHook(GameDataHolderAccessor value) {
     return GameDataFunction::isMissEndPrevStageForSceneDead(value);
 }
 
-
 ulong threadInit()
 { // hook for initializing any threads we need
     __asm("STR X21, [X19,#0x208]");
+
 
     return 0x20;
 }
@@ -209,9 +204,11 @@ bool triggerR(int port) {
 bool hakoniwaSequenceHook(HakoniwaSequence* sequence) {
     StageScene* stageScene = (StageScene*)sequence->curScene;
 
-    al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
-    PlayerActorHakoniwa* p1 = al::tryGetPlayerActor(pHolder, 0);//tryGetPlayerActor pHolder, 0
+    
 
+    al::PlayerHolder* pHolder = al::getScenePlayerHolder(stageScene);
+    PlayerActorBase* base = al::tryGetPlayerActor(pHolder, 0);
+    
     bool isFirstStep = al::isFirstStep(sequence);
 
     if (al::isPadTriggerUp(-1) && al::isPadHoldL(-1))  // enables/disables debug menu
@@ -219,15 +216,22 @@ bool hakoniwaSequenceHook(HakoniwaSequence* sequence) {
         showMenu = !showMenu;
     }
 
+    bool isYukimaru = !base->getPlayerInfo();  // rs::isPlayerHackYukimaru(p1) - didn't work
+
     
     Fludd().stageSceneRef = stageScene;
-    Fludd().mario = p1;
+    
 
     isInGame = !stageScene->isPause();
 
     // Fludd code
-    if (!stageScene->isPause())
+    if (!stageScene->isPause() && !isYukimaru) {
+        Fludd().setMarioPtr(((PlayerActorHakoniwa*)base));
         Fludd().updateFludd();
+    }
+        
+        
+    
 
     return isFirstStep;
 }
@@ -240,4 +244,20 @@ void seadPrintHook(const char *fmt, ...) // hook for replacing sead::system::pri
     gLogger->LOG(fmt, args);
 
     va_end(args);
+}
+
+al::PlayerHolder* createTicketHook(StageScene* curScene) {
+    // creates custom camera ticket (yoinked and changed from online mod)
+        al::CameraDirector* director = curScene->getCameraDirector();
+        if (director) {
+            if (director->mFactory) {
+                al::CameraTicket* rocketCamera = director->createCameraFromFactory(
+                    "CameraPoserCustom", nullptr, 0, 5, sead::Matrix34f::ident);
+
+                Fludd().rocketCamera = rocketCamera;
+            }
+        }
+    
+
+    return al::getScenePlayerHolder(curScene);
 }

@@ -23,8 +23,7 @@ B59E28: // sead::system::print
     MOV X2, X20 // drawContext
     BL drawMainHook
 
-//50E89C:
-//    BL threadInit
+50E89C BL threadInit
 
 //4C8958:
 //    BL initDebugListHook
@@ -54,3 +53,5 @@ B59E28: // sead::system::print
 //    RET
 
 85C710 B triggerR
+
+4C9080 BL createTicketHook

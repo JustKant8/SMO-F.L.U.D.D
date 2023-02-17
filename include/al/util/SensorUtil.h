@@ -284,6 +284,8 @@ namespace al
     bool isMsgPlayerUpperPunchForCrossoverSensor(al::SensorMsg const *, al::HitSensor const *, al::HitSensor const *, float);
     bool isMsgKickStoneTrampleForCrossoverSensor(al::SensorMsg const *, al::HitSensor const *, al::HitSensor const *);
 
+    bool sendMsgHammerBrosHammerHackAttack(al::HitSensor*, al::HitSensor*);
+
     bool sendMsgPlayerAttackTrample(al::HitSensor *, al::HitSensor *, al::ComboCounter *);
     bool sendMsgPlayerTrampleReflect(al::HitSensor *, al::HitSensor *, al::ComboCounter *);
     bool sendMsgPlayerReflectOrTrample(al::HitSensor *, al::HitSensor *, al::ComboCounter *);

@@ -5,12 +5,15 @@
 
 class PlayerModelHolder {
 public:
+
+    PlayerModelHolder(unsigned int);
+
     struct Entry {
         sead::FixedSafeString<0x80> mName;
         al::LiveActor* mLiveActor;
     };
 
-    PlayerModelHolder(unsigned int);
+    
     void registerModel(al::LiveActor*, char const*);
     void changeModel(char const*);
     al::LiveActor* findModelActor(char const*) const;
