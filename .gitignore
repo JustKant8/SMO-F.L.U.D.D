@@ -28,3 +28,4 @@ include/privateIps.hpp
 !exported.txt
 custom actor models/*
 compile_commands.json
+.vs/**/*
